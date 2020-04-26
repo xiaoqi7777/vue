@@ -7,7 +7,7 @@ let vm = new Vue({
     return{// Object.defineProperty
       msg:'hello',
       school:{name:'zf',age:12},
-      arr:[{a:1},1,2,3]
+      arr:[[1],{a:1},1,2,3]
     }
   },
   computed:{
@@ -15,7 +15,6 @@ let vm = new Vue({
   },
   watch:{
     msg(newValue,oldValue){
-      console.log()
     }
   }
 })
@@ -31,6 +30,16 @@ let vm = new Vue({
 // [].push /shift unshfit 这些方法可以被监控 vm.$set 内部就是调用的数组的splice方法 
 
 setTimeout(()=>{
-  console.log('start set value')
-  vm.msg = 100
+  // console.log('start set value')
+  // vm.msg = 1001
+  // vm.msg = 1002
+  // vm.msg = 1003
+  // vm.msg = 1004;//最终vm.msg = 'xxx' 来更新就好了
+
+  // vue的特点就是批量更新 防止重复渲染
+  // --------------数组更新 更新数组中的对象的属性是可以的 因为做了拦截处理
+  // vm.arr[2] = 1111
+  // 数组的依赖收集
+  vm.arr[0].push(1111)
+  console.log(vm)
 },1000)

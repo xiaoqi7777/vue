@@ -11,7 +11,7 @@ class Dep{
   notify(){
     this.subs.forEach(watcher=>watcher.update())
   }
-  depend(watcher){
+  depend(){
     if(Dep.target){
       // 为了防止直接调用depend方法 先判断一下
       // Dep.target是一個渲染watcher

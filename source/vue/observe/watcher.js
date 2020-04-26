@@ -1,5 +1,6 @@
 let id = 0
 import { pushTarget,popTarget } from './dep'
+import Vue from '..';
 class Watcher{ // 每次产生一个watcher 都要有一个唯一的标识
   /**
    * 
@@ -40,9 +41,62 @@ class Watcher{ // 每次产生一个watcher 都要有一个唯一的标识
     }
   }
   update(){
+    // 如果立即调用get 会导致页面刷新  需要异步来更新
+    // vue的特点就是批量更新
+    queueWatcher(this)
+  }
+  run(){
     this.get();
   }
+};
+let has = {}
+let queue = []
+function flushQueue(){
+    queue.forEach(watcher => watcher.run())
+    has = {} // 恢复正常 下一轮继续更新使用 
+    queue = []
 }
+function queueWatcher(watcher){
+  // 对重复的watcher过滤操作
+  let id = watcher.id
+  if(has[id] == null){
+    has[id] = true
+    queue.push(watcher);//相同的watcher 他只会存一个到queue中 
+    // 延迟情况队列
+    nextTick(flushQueue)
+  }
+}
+// 等待页面更新后再获取dom元素
+let callbacks = []
+function flushCallbacks(){
+  callbacks.forEach(cb=>cb())
+}
+function nextTick(cb){
+  callbacks.push(cb)
+  // 要异步刷新这个callbacks 获取一个异步的方法
+  // 异步是分执行顺序的 会先执行promise mutationObserver setImmediate setTimeout
+  let timerFunc = ()=>{
+    flushCallbacks();
+  }
+  if(Promise){
+    Promise.resolve().then(timerFunc)
+    return
+  }
+  // h5的api
+  if(MutationObserver){
+    let observe = new MutationObserver(timerFunc);
+    let textNode = document.createTextNode(1)
+    observe.observe(textNode,{characterData:true})
+    textNode.textContent = 2
+    return  
+  }
+  if(setImmediate){
+    setImmediate(timerFunc)
+    return
+  }
+  setTimeout(timerFunc,0)
+}
+
 // 渲染使用他 计算属性也要用它 vm.watcher也用它
 export default Watcher
 

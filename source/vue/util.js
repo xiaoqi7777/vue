@@ -16,7 +16,7 @@ export const util = {
     }
     // 编译文本 替换{{}} 替换{{school.name}}
     node.textContent = node.expr.replace(defaultRE,function(...args){
-      return util.getValue(vm,args[1])
+      return JSON.stringify(util.getValue(vm,args[1]))
     })
   }
 }

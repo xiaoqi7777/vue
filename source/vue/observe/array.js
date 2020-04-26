@@ -18,6 +18,15 @@ let methods =[
   "sort",
   "splice"
 ]
+export function dependArray(value){// 递归收集数组中的依赖
+  for(let i=0;i<value.length;i++){
+    let currentItem = value[i];// 有可能也是一个数组
+    currentItem.__ob__&&currentItem.__ob__.dep.depend();
+    if(Array.isArray(currentItem)){
+      dependArray(currentItem);// 不停的收集 数组中的依赖关系
+    }
+  }
+}
 export function observerArrary(inserted){
   // 要循环数组一次对数组中每一项进行观测
   for(let i=0;i<inserted.length;i++){
@@ -27,10 +36,11 @@ export function observerArrary(inserted){
 methods.forEach(method => {
   arrayMethods[method] = function(...args){
     // 函数劫持 切片编程
-    oldArrayProtoMethods[method].apply(this,args)
+    let r = oldArrayProtoMethods[method].apply(this,args)
     let inserted;
     switch(method){
       case 'push':
+        console.log('===========')
         break;
       case 'unshift':
         inserted = args
@@ -45,6 +55,9 @@ methods.forEach(method => {
       observerArrary(inserted)
     }
     console.log('==============>调用了数组更新的方法了',method)
+    // 数组方法操作的时候 通知视图更新 
+    this.__ob__.dep.notify() 
+    return r     
   }
 })
 

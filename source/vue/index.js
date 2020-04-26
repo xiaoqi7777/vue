@@ -1,6 +1,7 @@
 import {initState} from './observe'
 import Watcher from './observe/watcher'
 import { compiler,util } from './util'
+
 function Vue(options){// vue中元素用户 传入的数据
   this._init(options) // 初始化vue 并且将用户选项传入
 }  
@@ -15,6 +16,7 @@ Vue.prototype._init = function(options){
     vm.$mount();// 挂载
   }
 }
+
 function query(el){
   if(typeof el === 'string'){
     return document.querySelector(el)
@@ -22,8 +24,8 @@ function query(el){
   return el
 }
 
-
 Vue.prototype._update = function (){
+  console.log('更新数据')
   // 用户传入的数据 去更新视图
   let vm = this
   let el = vm.$el;
@@ -41,6 +43,7 @@ Vue.prototype._update = function (){
   
   // 依赖手机 属性变化了 需要重新渲染 watcher 和 dep
 }
+
 Vue.prototype.$mount = function(){
   let vm = this;
   let el = vm.$options.el;// 获取元素
