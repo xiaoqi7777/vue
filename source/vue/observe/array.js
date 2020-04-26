@@ -44,7 +44,6 @@ methods.forEach(method => {
     if(inserted) {
       observerArrary(inserted)
     }
-    console.log('==============>调用了数组更新的方法了',method)
   }
 })
 

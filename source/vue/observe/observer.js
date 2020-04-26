@@ -9,6 +9,7 @@ export function defineReactive(data,key,value){// 定义响应式的数据变化
   Object.defineProperty(data,key,{
     get(){ // 只要对这个属性进行了取值操作,就会将当前的watcher存入进去
       if(Dep.target){ // 这次有值用的是渲染watcher
+        console.log('获取值')
         // 我们希望存入的watcher 不能重复 如果重复会造成更新时多次渲染
         dep.depend(Dep.target);// 他让dep 中可以存watcher  我还虚妄让这个watcher中也存放dep,实现一个多对多的关系
         // dep.addSub(Dep.target)

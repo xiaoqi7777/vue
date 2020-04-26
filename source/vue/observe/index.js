@@ -8,9 +8,9 @@ export function initState(vm){
   if(opts.computed){
     initComputed();//初始化计算属性
   }
-  if(opts.watch){
-    initWatch();// 初始化watch
-  }
+  // if(opts.watch){
+  //   initWatch();// 初始化watch
+  // }
 }
 
 export function observe(data){

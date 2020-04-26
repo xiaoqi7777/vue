@@ -30,4 +30,6 @@ let vm = new Vue({
 // [{a:1}] 内部会对数组里的对象进行监控
 // [].push /shift unshfit 这些方法可以被监控 vm.$set 内部就是调用的数组的splice方法 
 
-
+setTimeout(()=>{
+  vm.msg = 100
+},1000)

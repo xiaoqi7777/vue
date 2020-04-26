@@ -50,7 +50,7 @@ Vue.prototype.$mount = function(){
   // 渲染watcher 用于渲染的watcher
   // vue2.0 组件级别更新 new Vue产生的一个组件
 
-  let updateComponent = ()=>{// 更新组件 、 渲染的逻辑
+  let updateComponent = ()=>{// 更新组件、渲染的逻辑
     vm._update();// 更新组件
   }
   new Watcher(vm,updateComponent);// 渲染watcher,默认会调用 updateComponent 这个方法
