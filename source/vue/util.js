@@ -11,8 +11,11 @@ export const util = {
     },vm)
   },
   compilerText(node,vm){
+    if(!node.expr){
+      node.expr = node.textContent
+    }
     // 编译文本 替换{{}} 替换{{school.name}}
-    node.textContent = node.textContent.replace(defaultRE,function(...args){
+    node.textContent = node.expr.replace(defaultRE,function(...args){
       return util.getValue(vm,args[1])
     })
   }
