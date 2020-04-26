@@ -53,7 +53,8 @@ Vue.prototype.$mount = function(){
   let updateComponent = ()=>{// 更新组件 、 渲染的逻辑
     vm._update();// 更新组件
   }
-  new Watcher(vm,updateComponent);// 渲染watcher
+  new Watcher(vm,updateComponent);// 渲染watcher,默认会调用 updateComponent 这个方法
+  // 如果数据更新了
 
 }
 

@@ -14,11 +14,13 @@ let vm = new Vue({
 
   },
   watch:{
-
+    msg(newValue,oldValue){
+      console.log()
+    }
   }
 })
 // vm.msg = 100
-console.log('==>',vm.arr[0]['a'] = 100)
+// console.log('==>',vm.arr[0]['a'] = 100)
 
 // 什么样的数组会被观测 
 // 不能(这就是数据劫持的2个缺点)
@@ -27,3 +29,5 @@ console.log('==>',vm.arr[0]['a'] = 100)
 // 能
 // [{a:1}] 内部会对数组里的对象进行监控
 // [].push /shift unshfit 这些方法可以被监控 vm.$set 内部就是调用的数组的splice方法 
+
+
