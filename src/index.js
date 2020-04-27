@@ -15,6 +15,7 @@ let vm = new Vue({
   },
   watch:{
     msg(newValue,oldValue){
+      console.log('watch==>',newValue,oldValue)
     }
   }
 })
@@ -40,6 +41,9 @@ setTimeout(()=>{
   // --------------数组更新 更新数组中的对象的属性是可以的 因为做了拦截处理
   // vm.arr[2] = 1111
   // 数组的依赖收集
-  vm.arr[0].push(1111)
-  console.log(vm)
+  // vm.arr[0].push(1111)
+  // console.log(vm)
+
+  // watch
+  vm.msg = '100'
 },1000)
