@@ -10,6 +10,8 @@ class Watcher{ // 每次产生一个watcher 都要有一个唯一的标识
    * @param {*} cb  用户传入的回调函数 vm.$watch('msg',cb)
    * @param {*} opts 一些其他参数
    */
+  // vm msg (newValue,oldValue)=>{} {user:true}
+  // vm ()=>this.fullName+this.lastName ()=>{} lazy:true
   constructor(vm,exprOrFn,cb=()=>{},opts={}){
     this.vm = vm;
     this.exprOrFn = exprOrFn
@@ -26,6 +28,8 @@ class Watcher{ // 每次产生一个watcher 都要有一个唯一的标识
       // 标识是用户自己写的watch
       this.user = true;
     }
+    this.lazy = opts.lazy; // 为true 说明他是计算属性
+    this.dirty = this.lazy;
     this.cb = cb
     this.deps = []
     this.depsId = new Set()
@@ -33,7 +37,8 @@ class Watcher{ // 每次产生一个watcher 都要有一个唯一的标识
     this.id = id++
     this.immediate = opts.immediate
     // 创建watcher的时候  先将表达式对应 值取出来(老值)
-    this.oldValue = this.get();//默认创建一个watcher 会调用自身的get方法
+    // 如果当前我们是计算属性的话 不会默认调用get方法
+    this.oldValue = this.lazy ? undefined : this.get();//默认创建一个watcher 会调用自身的get方法
     if(this.immediate){ // 如果有immediate 就直接运行用户定义的函数
       this.cb(this.oldValue)
     }
@@ -44,9 +49,22 @@ class Watcher{ // 每次产生一个watcher 都要有一个唯一的标识
     // msg 变化了 需要让这个watcher重新执行
     pushTarget(this)
     // 默认创建watcher 会执行此方法
-    let value = this.getter();// 让这个当前传入的函数执行
+    // 这个函数调用时 就会将当前计算属性watcher 存起来
+    let value = this.getter.call(this.vm);// 让这个当前传入的函数执行
+    
     popTarget();
+
     return value
+  }
+  depend(){
+    let i = this.deps.length;
+    while(i--){
+      this.deps[i].depend();
+    }
+  }
+  evaluate(){
+    this.value = this.get();
+    this.dirty = false; // dirty:false 表示值求过了
   }
   addDep(dep){
     // 同一个watcher 不应该重复记录dep
@@ -60,7 +78,12 @@ class Watcher{ // 每次产生一个watcher 都要有一个唯一的标识
   update(){
     // 如果立即调用get 会导致页面刷新  需要异步来更新
     // vue的特点就是批量更新
-    queueWatcher(this)
+    if(this.lazy){
+      // 如果是计算属性值变化了 稍后取值时重新计算
+      this.dirty = true 
+    }else{
+      queueWatcher(this)
+     }
   }
   run(){
     let newValue = this.get();//新值

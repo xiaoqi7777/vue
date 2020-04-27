@@ -7,11 +7,16 @@ let vm = new Vue({
     return{// Object.defineProperty
       msg:'hello',
       school:{name:'zf',age:12},
-      arr:[[1],{a:1},1,2,3]
+      arr:[[1],{a:1},1,2,3],
+      firstName:'song',
+      lastName:'ge'
     }
   },
+  // computed 其实也是一个watch
   computed:{
-
+    fullName(){
+      return this.firstName+this.lastName
+    }
   },
   watch:{
     // msg(newValue,oldValue){
@@ -52,5 +57,9 @@ setTimeout(()=>{
   // console.log(vm)
 
   // watch
-  vm.msg = '100'
+  // vm.msg = '100'
+
+  // 更改计算属性
+  // 当前的
+  vm.firstName = '==='
 },1000)
