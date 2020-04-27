@@ -47,15 +47,19 @@ function initData(vm){
 function initComputed(){
 
 }
-function createWatcher(vm,key,handler){
+function createWatcher(vm,key,handler,opts){
   // 内部最终也会使用$watch方法
-  return vm.$watch(key,handler);
+  return vm.$watch(key,handler,opts);
 }
 function initWatch(vm){
   let watch = vm.$options.watch;// 获取用户传入的watch属性
   for(let key in watch){ //msg:(){},msg:[(){},(){}] 可能是对象 可能是数组
   console.log('key',key)
-    let handler = watch[key]
-    createWatcher(vm,key,handler)
+    let userDef = watch[key];
+    let handler = userDef
+    if(userDef.handler){
+      handler = userDef.handler
+    }
+    createWatcher(vm,key,handler,{immediate:userDef.immediate})
   }
 }

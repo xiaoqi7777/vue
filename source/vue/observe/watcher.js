@@ -31,8 +31,12 @@ class Watcher{ // 每次产生一个watcher 都要有一个唯一的标识
     this.depsId = new Set()
     this.opts = opts
     this.id = id++
+    this.immediate = opts.immediate
     // 创建watcher的时候  先将表达式对应 值取出来(老值)
     this.oldValue = this.get();//默认创建一个watcher 会调用自身的get方法
+    if(this.immediate){ // 如果有immediate 就直接运行用户定义的函数
+      this.cb(this.oldValue)
+    }
   }
   get(){
     //  Dep.target = 用户的watcher

@@ -14,8 +14,15 @@ let vm = new Vue({
 
   },
   watch:{
-    msg(newValue,oldValue){
-      console.log('watch==>',newValue,oldValue)
+    // msg(newValue,oldValue){
+    //   console.log('watch==>',newValue,oldValue)
+    // }
+    msg:{
+      handler(newValue,oldValue){
+        console.log('watch==>',newValue,oldValue)
+      },
+      // 深度监控
+      immediate:true
     }
   }
 })
